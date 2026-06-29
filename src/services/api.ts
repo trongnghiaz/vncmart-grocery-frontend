@@ -1,7 +1,20 @@
 // src/services/api.ts
 import axios, { AxiosError } from 'axios';
-import type { InternalAxiosRequestConfig } from 'axios';
-import type { ApiResponse, ErrorResponse } from '@/types/api';
+import type { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import type { ApiResponse } from '@/types/api';
+
+const DEFAULT_ERROR_MESSAGE = 'Lỗi hệ thống, vui lòng thử lại.';
+const NETWORK_ERROR_MESSAGE = 'Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại mạng.';
+
+function getErrorMessage(payload: unknown): string {
+  if (!payload || typeof payload !== 'object') {
+    return DEFAULT_ERROR_MESSAGE;
+  }
+
+  const errorPayload = payload as Partial<{ message: string; detail: string; title: string }>;
+
+  return errorPayload.message || errorPayload.detail || errorPayload.title || DEFAULT_ERROR_MESSAGE;
+}
 
 // 1. Khởi tạo Axios Instance với Base URL cấu hình từ môi trường (.env)
 const apiClient = axios.create({
@@ -23,16 +36,16 @@ apiClient.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
+  (error: unknown) => {
     return Promise.reject(error);
   }
 );
 
 // 3. Response Interceptor: Chuẩn hóa dữ liệu trả về và bắt lỗi tập trung (Mục 3, 12)
 apiClient.interceptors.response.use(
-  (response) => {
-    // Backend trả về dạng ApiResponse<T>, chúng ta bóc tách lấy .data để dùng luôn
-    const apiData = response.data as ApiResponse<any>;
+  (response: AxiosResponse<ApiResponse<unknown>>) => {
+    // Backend trả về dạng ApiResponse<T>; chặn sớm các lỗi nghiệp vụ trả về HTTP 200.
+    const apiData = response.data;
     
     if (apiData && apiData.isSuccess === false) {
       // Xử lý trường hợp HTTP 200 nhưng business logic báo lỗi (isSuccess = false)
@@ -45,30 +58,21 @@ apiClient.interceptors.response.use(
     // Kiểm tra nếu lỗi phản hồi từ Server (Shape: ErrorResponse ở Mục 3)
     if (error.response) {
       const status = error.response.status;
-      const errorData = error.response.data as ErrorResponse;
-      
-      // Lấy câu thông báo lỗi tối ưu nhất từ backend đưa xuống
-      const friendlyMessage = errorData?.message || errorData?.detail || 'Lỗi hệ thống, vui lòng thử lại.';
+      const friendlyMessage = getErrorMessage(error.response.data);
 
       switch (status) {
         case 401:
           // Hết hạn token hoặc chưa đăng nhập -> Xóa session, điều hướng về login
           localStorage.removeItem('vnc_auth_token');
-          // Tùy chỉnh logic redirect về trang login phù hợp (Customer/Admin) ở phần router sau
-          alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-          window.location.href = '/login';
           break;
           
         case 403:
-          // Không có quyền truy cập vào tính năng này (ví dụ customer vào trang admin)
-          alert('Bạn không có quyền thực hiện hành động này.');
+          console.warn(`[API Error ${status}]:`, friendlyMessage);
           break;
           
         case 400:
         case 404:
         case 500:
-          // Các lỗi nghiệp vụ khác: Hiện thông báo thông qua alert (sau này sẽ kết nối với Toast/Modal từ Stitch)
-          // Bạn có thể kích hoạt một global event hoặc pinia store ở đây để bật popup lỗi
           console.error(`[API Error ${status}]:`, friendlyMessage);
           break;
           
@@ -80,7 +84,7 @@ apiClient.interceptors.response.use(
     }
     
     // Trường hợp mất kết nối mạng hoặc server sập không phản hồi
-    return Promise.reject('Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại mạng.');
+    return Promise.reject(NETWORK_ERROR_MESSAGE);
   }
 );
 

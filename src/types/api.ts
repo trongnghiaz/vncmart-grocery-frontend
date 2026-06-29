@@ -128,7 +128,7 @@ export interface ProductDetailDto extends ProductDto {
   description?: Nullable<string>
 }
 
-export interface GetProductsRequest extends SearchPagingRequest {}
+export type GetProductsRequest = SearchPagingRequest
 
 export interface CreateProductRequest {
   productCode: string

@@ -9,8 +9,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'CustomerLayout',
-    // Tạm thời dùng component trống, sau này sẽ thay bằng file Layout hoàn chỉnh của Stitch
-    component: () => import('../views/customer/HomeView.vue'), // Đổi thành CustomerLayout sau khi có file
+    component: () => import('../components/customer/CustomerLayout.vue'),
     children: [
       {
         path: '',
@@ -46,7 +45,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/admin',
     name: 'AdminLayout',
-    component: () => import('../views/admin/DashboardView.vue'), // Đổi thành AdminLayout sau khi có file
+    component: () => import('../components/admin/AdminLayout.vue'),
     children: [
       {
         path: 'dashboard',
@@ -68,7 +67,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     component: () => import('../views/customer/NotFoundView.vue'),
-  }
+  },
 ];
 
 // 2. Khởi tạo thực thể Router
@@ -78,7 +77,7 @@ const router = createRouter({
 });
 
 // 3. Toàn cục Navigation Guard (Nơi sau này chặn quyền truy cập)
-router.beforeEach((to, from, next) => {
+router.beforeEach((_to, _from, next) => {
   // Logic kiểm tra token và phân quyền (Mục 11, 12) sẽ được viết ở đây
   next();
 });
