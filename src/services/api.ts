@@ -2,6 +2,7 @@
 import axios, { AxiosError } from 'axios';
 import type { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import type { ApiResponse } from '@/types/api';
+import { useAuthStore } from '../stores/auth';
 
 const DEFAULT_ERROR_MESSAGE = 'Lỗi hệ thống, vui lòng thử lại.';
 const NETWORK_ERROR_MESSAGE = 'Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại mạng.';
@@ -28,15 +29,16 @@ const apiClient = axios.create({
 // 2. Request Interceptor: Tự động đính kèm Bearer Token vào Header nếu có
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // Tạm thời lấy từ localStorage, sau này chúng ta sẽ tích hợp với Pinia store
-    const token = localStorage.getItem('vnc_auth_token');
+    // Lấy token trực tiếp từ Pinia Auth Store thay vì đọc thủ công từ localStorage
+    const authStore = useAuthStore();
+    const token = authStore.token;
     
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error: unknown) => {
+  (error) => {
     return Promise.reject(error);
   }
 );
@@ -63,7 +65,9 @@ apiClient.interceptors.response.use(
       switch (status) {
         case 401:
           // Hết hạn token hoặc chưa đăng nhập -> Xóa session, điều hướng về login
-          localStorage.removeItem('vnc_auth_token');
+          const authStore = useAuthStore();
+          authStore.logout(); // Gọi hàm logout tập trung để xóa sạch session
+          window.location.href = '/login';
           break;
           
         case 403:
