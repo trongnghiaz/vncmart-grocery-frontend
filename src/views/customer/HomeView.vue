@@ -79,12 +79,18 @@
           <button type="button" class="absolute top-6 right-6 z-10 w-10 h-10 flex items-center justify-center bg-white/80 backdrop-blur rounded-full text-gray-500 hover:text-red-500 transition-colors">
             <span class="material-symbols-outlined">favorite</span>
           </button>
-          <div class="aspect-square rounded-2xl overflow-hidden mb-4 bg-gray-50">
+          <RouterLink
+            :to="{ name: 'ProductDetail', params: { id: product.id } }"
+            class="mb-4 block aspect-square overflow-hidden rounded-2xl bg-gray-50"
+            :aria-label="`View ${product.name}`"
+          >
             <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" :src="product.image" :alt="product.name"/>
-          </div>
+          </RouterLink>
           <div class="px-1">
             <p class="text-xs font-semibold text-[#2b6954] mb-1 uppercase tracking-wider">{{ product.categoryName }}</p>
-            <h3 class="font-bold text-base text-gray-800 mb-2 truncate">{{ product.name }}</h3>
+            <RouterLink :to="{ name: 'ProductDetail', params: { id: product.id } }">
+              <h3 class="font-bold text-base text-gray-800 mb-2 truncate transition-colors hover:text-[#006c49]">{{ product.name }}</h3>
+            </RouterLink>
             <div class="flex items-center gap-1 mb-4">
               <span class="material-symbols-outlined text-amber-400 text-sm style-filled">star</span>
               <span class="text-sm font-semibold text-gray-800">{{ product.rating }}</span>
