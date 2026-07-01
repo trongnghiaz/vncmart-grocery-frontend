@@ -1,15 +1,15 @@
 <template>
-  <div>
+  <div class="space-y-10">
     <!-- Hero Banner -->
-    <section class="mt-lg rounded-4xl overflow-hidden relative h-105 bg-[#006c49] flex items-center">
+    <section class="relative mt-4 flex min-h-[360px] items-center overflow-hidden rounded-[32px] bg-[#006c49] sm:min-h-[420px]">
       <div class="absolute inset-0 z-0">
         <div class="w-full h-full bg-cover bg-center opacity-80 mix-blend-overlay" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBTSmdSdMJPGEQ2Xvn4mpYk-VvuOWwTmygMs3uzZjCioYXpSZDhUEAzKDU7pMEZHjJAA9QNCML0W08hO4I3UMdQYimR591iKKSG8INrmOjhFLwhf2O4jdzo60ADM2YW6ouRhZUcPf-DIIJH4V2VYQK-hpAmaZ693j3Rlf4RnmTdw9SZar755wEhT865SqKJwHQngIimXDwK2zS9WvkpbhCZ9KBiYpMwQ8wRUuhI4SwrM1zdM3HHqhfwBS6JVwADR_sb5aph9l6WZ1GG')"></div>
-        <div class="absolute inset-0 bg-linear-to-r from-[#006c49] via-[#006c49]/60 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-[#006c49] via-[#006c49]/70 to-transparent"></div>
       </div>
-      <div class="relative z-10 px-12 max-w-2xl">
+      <div class="relative z-10 max-w-2xl px-6 py-12 sm:px-12">
         <span class="inline-block px-4 py-1.5 bg-[#6ffbbe] text-[#002113] rounded-full font-semibold text-xs mb-6">Market Fresh Daily</span>
-        <h1 class="font-bold text-4xl text-white mb-6 leading-tight">Fresh Groceries Delivered To Your Doorstep.</h1>
-        <p class="text-lg text-[#6ffbbe]/90 mb-8 max-w-md">Quality hand-picked produce from local farms, delivered within 2 hours of your order.</p>
+        <h1 class="mb-6 text-3xl font-bold leading-tight text-white sm:text-4xl">Fresh Groceries Delivered To Your Doorstep.</h1>
+        <p class="mb-8 max-w-md text-base text-[#6ffbbe]/90 sm:text-lg">Quality hand-picked produce from local farms, delivered within 2 hours of your order.</p>
         <button type="button" class="bg-white text-[#006c49] px-8 py-4 rounded-xl font-bold shadow-lg hover:shadow-[#006c49]/20 transition-all active:scale-95">
           Shop Now
         </button>
@@ -29,7 +29,7 @@
     </section>
 
     <!-- Category Pills -->
-    <section class="mt-10 overflow-x-auto pb-4 hide-scrollbar">
+    <section class="overflow-x-auto pb-1 hide-scrollbar">
       <div class="flex gap-4 min-w-max">
         <button 
           v-for="category in categories" 
@@ -46,13 +46,13 @@
     </section>
 
     <!-- Product Grid -->
-    <section class="mt-8">
-      <div class="flex justify-between items-end mb-8">
+    <section>
+      <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 class="text-2xl font-bold text-gray-800">Recommended for You</h2>
           <p class="text-sm text-gray-500">Top freshness picks based on your recent activity.</p>
         </div>
-        <div class="flex gap-2">
+        <div class="flex shrink-0 gap-2">
           <button type="button" class="p-2 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors">
             <span class="material-symbols-outlined">filter_list</span>
           </button>
@@ -114,7 +114,7 @@
     </section>
 
     <!-- Pagination -->
-    <section class="mt-12 flex justify-center pb-12">
+    <section class="flex justify-center pb-12">
       <nav class="flex items-center gap-2 bg-white px-4 py-2 rounded-2xl shadow-sm">
         <button type="button" class="w-10 h-10 flex items-center justify-center rounded-xl text-gray-500 hover:bg-gray-100 transition-colors">
           <span class="material-symbols-outlined">chevron_left</span>

@@ -1,39 +1,36 @@
-// src/services/auth.service.ts
 import apiClient from './api';
-import { type ApiResponse, type AuthResultDto } from '@/types/api';
+import type { ApiResponse, AuthResultDto, LoginRequest, RegisterRequest } from '@/types/api';
+
+function unwrapData<T>(response: { data: ApiResponse<T> }): T {
+  return response.data.data;
+}
 
 export const authService = {
-  /**
-   * Phương thức 1: Đăng nhập bằng Số điện thoại + Mật khẩu (Mục 4)
-   */
-  async loginWithPassword(phone: string, password: string): Promise<AuthResultDto> {
-    // Gửi request POST lên endpoint tương ứng của .NET Core
-    const response = await apiClient.post<ApiResponse<AuthResultDto>>('/auth/login-password', {
-      phone,
-      password
-    });
-    
-    // axios interceptor của mình đã bóc tách dữ liệu, ở đây ta chỉ cần trả về .data
-    return response.data.data;
+  async registerCustomer(payload: RegisterRequest): Promise<boolean> {
+    const response = await apiClient.post<ApiResponse<boolean>>('/Auth/customer/register', payload);
+    return unwrapData(response);
   },
 
-  /**
-   * Phương thức 2A: Yêu cầu hệ thống gửi mã OTP về Số điện thoại (Mục 4)
-   * Hàm này sẽ kích hoạt tổng đài gửi SMS hoặc trả về trạng thái để UI bật countdown timer
-   */
+  async loginCustomer(account: string, password: string): Promise<AuthResultDto> {
+    const payload: LoginRequest = { account, password };
+    const response = await apiClient.post<ApiResponse<AuthResultDto>>('/Auth/customer/login', payload);
+    return unwrapData(response);
+  },
+
+  async loginStaff(account: string, password: string): Promise<AuthResultDto> {
+    const payload: LoginRequest = { account, password };
+    const response = await apiClient.post<ApiResponse<AuthResultDto>>('/Auth/staff/login', payload);
+    return unwrapData(response);
+  },
+
   async requestOtp(phone: string): Promise<boolean> {
-    const response = await apiClient.post<ApiResponse<string>>('/auth/request-otp', { phone });
-    return response.data.isSuccess;
+    void phone;
+    throw new Error('Backend hiện chưa hỗ trợ đăng nhập bằng OTP.');
   },
 
-  /**
-   * Phương thức 2B: Xác thực mã OTP để đăng nhập hệ thống (Mục 4)
-   */
   async loginWithOtp(phone: string, otpCode: string): Promise<AuthResultDto> {
-    const response = await apiClient.post<ApiResponse<AuthResultDto>>('/auth/verify-otp', {
-      phone,
-      otpCode
-    });
-    return response.data.data;
-  }
+    void phone;
+    void otpCode;
+    throw new Error('Backend hiện chưa hỗ trợ đăng nhập bằng OTP.');
+  },
 };

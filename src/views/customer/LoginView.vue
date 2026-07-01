@@ -18,8 +18,7 @@
         <p class="text-sm text-gray-500 mt-1">Freshness delivered to your doorstep</p>
       </div>
 
-      <!-- Tabs Chuyển Đổi Chế Độ -->
-      <div class="w-full flex border-b border-gray-200 mb-6">
+      <div v-if="supportsOtp && !isStaffLogin" class="w-full flex border-b border-gray-200 mb-6">
         <button 
           type="button"
           @click="loginMode = 'password'"
@@ -45,14 +44,14 @@
       <!-- FORM PHƯƠNG THỨC MẬT KHẨU -->
       <form v-if="loginMode === 'password'" @submit.prevent="handleSubmit" class="w-full space-y-6">
         <div class="space-y-2">
-          <label class="text-sm font-semibold text-gray-600 ml-1">Phone Number</label>
+          <label class="text-sm font-semibold text-gray-600 ml-1">{{ accountLabel }}</label>
           <div class="relative flex items-center">
-            <span class="material-symbols-outlined absolute left-4 text-gray-400 select-none">call</span>
+            <span class="material-symbols-outlined absolute left-4 text-gray-400 select-none">{{ accountIcon }}</span>
             <input 
-              v-model="phone"
-              type="tel" 
+              v-model="account"
+              :type="accountInputType" 
               required
-              placeholder="Enter your mobile number" 
+              :placeholder="accountPlaceholder" 
               class="w-full h-12 pl-12 pr-4 bg-gray-50 border-transparent rounded-xl focus:border-[#006c49] focus:bg-white focus:ring-0 transition-colors text-sm text-gray-800"
             />
           </div>
@@ -91,7 +90,7 @@
             <div class="relative flex-1 flex items-center">
               <span class="material-symbols-outlined absolute left-4 text-gray-400 select-none">call</span>
               <input 
-                v-model="phone"
+                v-model="account"
                 type="tel" 
                 required
                 placeholder="Enter mobile number" 
@@ -101,7 +100,7 @@
             <button 
               type="button"
               @click="handleGetOtp"
-              :disabled="isOtpCooldown || !phone"
+              :disabled="isOtpCooldown || !account"
               class="h-12 px-6 bg-emerald-50 text-[#006c49] text-sm font-semibold rounded-xl hover:bg-emerald-100/80 transition-all shrink-0 disabled:opacity-50"
             >
               Send OTP
@@ -153,7 +152,8 @@
         <div class="text-center">
           <p class="text-sm text-gray-500">
             Don't have an account? 
-            <a class="text-sm font-semibold text-[#006c49] hover:underline underline-offset-4 ml-1" href="#">Register</a>
+            <a v-if="!isStaffLogin" class="text-sm font-semibold text-[#006c49] hover:underline underline-offset-4 ml-1" href="#">Register</a>
+            <span v-else class="text-sm font-semibold text-[#006c49] ml-1">Staff Portal</span>
           </p>
         </div>
       </div>
@@ -175,27 +175,35 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick } from 'vue';
-import { useRouter } from 'vue-router';
+import { computed, nextTick, onBeforeUnmount, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { authService } from '@/services/auth.service';
 
+const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+const supportsOtp = false;
 
-// Trạng thái Form Đăng nhập
 const loginMode = ref<'password' | 'otp'>('password');
-const phone = ref<string>('');
+const account = ref('');
 const password = ref<string>('');
 const isPasswordVisible = ref<boolean>(false);
 
-// Xử lý logic 6 ô nhập mã OTP độc lập
 const otpDigits = ref<string[]>(Array(6).fill(''));
 const otpInputs = ref<HTMLInputElement[]>([]);
 
-// Trạng thái đếm ngược OTP
 const isOtpCooldown = ref<boolean>(false);
 const cooldownSeconds = ref<number>(0);
+const otpTimer = ref<number | null>(null);
+
+const isStaffLogin = computed(() => route.name === 'AdminLogin');
+const accountLabel = computed(() => (isStaffLogin.value ? 'Staff Email' : 'Phone Number'));
+const accountIcon = computed(() => (isStaffLogin.value ? 'mail' : 'call'));
+const accountInputType = computed(() => (isStaffLogin.value ? 'email' : 'tel'));
+const accountPlaceholder = computed(() =>
+  isStaffLogin.value ? 'Enter your staff email' : 'Enter your mobile number',
+);
 
 // Xử lý tự động chuyển ô (Focus) khi gõ mã OTP
 function handleOtpInput(event: Event, index: number) {
@@ -214,6 +222,7 @@ function handleOtpInput(event: Event, index: number) {
 
 // Xử lý bấm Backspace chuyển lùi ô OTP
 function handleOtpBackspace(event: Event, index: number) {
+  void event;
   // Nếu ô hiện tại đang trống và vị trí > 0, tự động nhảy lùi về ô trước
   if (!otpDigits.value[index] && index > 0) {
     nextTick(() => {
@@ -224,49 +233,66 @@ function handleOtpBackspace(event: Event, index: number) {
 
 // Hàm đếm ngược thời gian hồi mã OTP
 function startOtpTimer() {
+  stopOtpTimer();
   isOtpCooldown.value = true;
   cooldownSeconds.value = 59;
-  const timer = setInterval(() => {
+  otpTimer.value = window.setInterval(() => {
     cooldownSeconds.value--;
     if (cooldownSeconds.value <= 0) {
-      clearInterval(timer);
-      isOtpCooldown.value = false;
+      stopOtpTimer();
     }
   }, 1000);
 }
 
+function stopOtpTimer() {
+  if (otpTimer.value !== null) {
+    window.clearInterval(otpTimer.value);
+    otpTimer.value = null;
+  }
+  isOtpCooldown.value = false;
+}
+
 // Gọi API gửi mã OTP ngầm lên Backend
 async function handleGetOtp() {
-  if (!phone.value) {
-    alert('Please enter your phone number first.');
+  if (!account.value) {
+    authStore.setAuthError('Please enter your phone number first.');
     return;
   }
+
   try {
-    const success = await authService.requestOtp(phone.value);
+    const success = await authService.requestOtp(account.value);
     if (success) {
       startOtpTimer();
     }
-  } catch (err: any) {
-    alert(err || 'Failed to send OTP code.');
+  } catch (error) {
+    authStore.setAuthError(error instanceof Error ? error.message : 'Failed to send OTP code.');
   }
 }
 
-// Thực thi submit Form chung lên Pinia Auth Store
 async function handleSubmit() {
   try {
-    if (loginMode.value === 'password') {
-      await authStore.handleLoginWithPassword(phone.value, password.value);
+    if (isStaffLogin.value) {
+      loginMode.value = 'password';
+      await authStore.loginStaff(account.value, password.value);
+    } else if (loginMode.value === 'password') {
+      await authStore.loginCustomer(account.value, password.value);
     } else {
       const fullOtpCode = otpDigits.value.join('');
       if (fullOtpCode.length < 6) {
         authStore.setAuthError('Please enter the full 6-digit verification code.');
         return;
       }
-      await authStore.handleLoginWithOtp(phone.value, fullOtpCode);
+      await authStore.loginWithOtp(account.value, fullOtpCode);
     }
-    
-    // Điều hướng phân quyền (RBAC) sau khi đăng nhập thành công
-    if (authStore.isAdmin) {
+
+    const redirectTo =
+      typeof route.query.redirect === 'string' && route.query.redirect.startsWith('/')
+        ? route.query.redirect
+        : null;
+
+    if (redirectTo) {
+      router.push(redirectTo);
+    } else if (authStore.isAdmin) {
       router.push({ name: 'AdminDashboard' });
     } else {
       router.push({ name: 'Home' });
@@ -275,6 +301,8 @@ async function handleSubmit() {
     console.error('Authentication process stopped:', err);
   }
 }
+
+onBeforeUnmount(stopOtpTimer);
 </script>
 
 <style scoped>
