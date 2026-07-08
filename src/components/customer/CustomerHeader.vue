@@ -32,10 +32,12 @@
       </nav>
 
       <div class="flex shrink-0 items-center gap-2 sm:gap-3">
-        <RouterLink
-          :to="{ name: 'Cart' }"
+        <button
+          type="button"
           class="relative flex h-10 w-10 items-center justify-center rounded-lg text-gray-800 transition hover:bg-emerald-50 active:scale-95"
           aria-label="Open cart"
+          :aria-expanded="isCartOpen"
+          @click="openCart"
         >
           <span class="material-symbols-outlined">shopping_cart</span>
           <span
@@ -44,7 +46,7 @@
           >
             {{ cartCount }}
           </span>
-        </RouterLink>
+        </button>
 
         <div class="relative">
           <button
@@ -135,25 +137,67 @@
       </nav>
     </div>
   </header>
+
+  <CartDrawer v-model:items="cartItems" :open="isCartOpen" @close="isCartOpen = false" />
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter, type RouteLocationRaw } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import CartDrawer from './CartDrawer.vue';
 
 interface HeaderLink {
   label: string;
   to: RouteLocationRaw;
 }
 
+interface CartDrawerItem {
+  id: number;
+  name: string;
+  unit: string;
+  price: number;
+  quantity: number;
+  image: string;
+}
+
 const router = useRouter();
 const authStore = useAuthStore();
 
-const cartCount = ref(0);
+const cartItems = ref<CartDrawerItem[]>([
+  {
+    id: 1,
+    name: 'Vine-Ripened Tomatoes',
+    unit: '500g Pack',
+    price: 45000,
+    quantity: 1,
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBK44bpPb41zCYjtH8XqaI9lviWMcnWC7Vf6lGZMTOl4SUOUMMuFtFf8axhkvBfJocPWQhjL0xvJYNE6fWM4VXNtLnPsu97kQ4WYUrUKs8IlNojpKrmYK6qEEZrZ4fmeDAHAFxjptdESP9oEsLEP1GQwwEgxcqw1-rqmpXs3San6XHA2IyjjbG4XDJsCe-aatGEslqFPKWOBAtQh0zWDFTxSbUpqrh1SBJ6PhQmp5hW5XMiv0FtI8tmdAVBpfl3dkB1a4AfS0L-QhAk',
+  },
+  {
+    id: 3,
+    name: 'Artisan Sourdough',
+    unit: 'Large Loaf',
+    price: 32000,
+    quantity: 1,
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAbCsNKlFNeudY-erRe6hDCaE5FMuGVySjsJ3c3iKd3m8r47OVzR8VOcSc6rJw6TcAwHZUBoyNQYtdOdKOJQQPYIBuIdf7OPVNjKjjgf2f1LEM2MpNxIYBGZ1A2Mgs1Ztul5WwcfaFWw__qDttAFEIITAANVBfAydHAJ0wYEjBtizyHM59tfCjiyQbUUIuilo_ZcjWOmbOX1XYGtK7o4128f6g8E96yDDGUoGkczz843eaM6j8Bv0W4C04Og8MWsqoTRJTWGSOvn5dr',
+  },
+  {
+    id: 4,
+    name: 'Grass-Fed Milk',
+    unit: '1L Bottle',
+    price: 18000,
+    quantity: 1,
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAGa3kkcebhOkMHOIYDMOKoV6ct3lVBBXy4rqZWYNtcbD4UZQ5b36J3mXXU0B9Ut6vAyMuDSTP1443vZq_n3VdbE-Y9Q4539YP0HQJSLmBm88anlZNvKza3sdyzrEVSwzUL5DIFWG4lNRL_WwvjdH4eKk5ML1hseC-H-wv_1JKdxL1WjuwgX7PCuaZ8oMXgVYPzB1NuHec1mRNNTBfbusBr83cuYl-v3u91Zd1QhT3dJOipMz4St6MYnAkP9ek_onCbBJnKce-MAOrD',
+  },
+]);
 const searchTerm = ref('');
 const isMobileMenuOpen = ref(false);
 const isAccountMenuOpen = ref(false);
+const isCartOpen = ref(false);
+const cartCount = computed(() => cartItems.value.reduce((total, item) => total + item.quantity, 0));
 
 const categoryLinks: HeaderLink[] = [
   { label: 'Vegetables', to: { name: 'Home', query: { category: 'vegetables' } } },
@@ -166,6 +210,11 @@ const categoryLinks: HeaderLink[] = [
 function closeMenus() {
   isMobileMenuOpen.value = false;
   isAccountMenuOpen.value = false;
+}
+
+function openCart() {
+  closeMenus();
+  isCartOpen.value = true;
 }
 
 function submitSearch() {
