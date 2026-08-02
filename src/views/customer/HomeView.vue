@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-10">
     <!-- Hero Banner -->
-    <section class="relative mt-4 flex min-h-[360px] items-center overflow-hidden rounded-[32px] bg-[#006c49] sm:min-h-[420px]">
+    <section class="relative mt-4 flex min-h-90 items-center overflow-hidden bg-[#006c49] sm:min-h-[420px]">
       <div class="absolute inset-0 z-0">
         <div class="w-full h-full bg-cover bg-center opacity-80 mix-blend-overlay" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBTSmdSdMJPGEQ2Xvn4mpYk-VvuOWwTmygMs3uzZjCioYXpSZDhUEAzKDU7pMEZHjJAA9QNCML0W08hO4I3UMdQYimR591iKKSG8INrmOjhFLwhf2O4jdzo60ADM2YW6ouRhZUcPf-DIIJH4V2VYQK-hpAmaZ693j3Rlf4RnmTdw9SZar755wEhT865SqKJwHQngIimXDwK2zS9WvkpbhCZ9KBiYpMwQ8wRUuhI4SwrM1zdM3HHqhfwBS6JVwADR_sb5aph9l6WZ1GG')"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-[#006c49] via-[#006c49]/70 to-transparent"></div>
@@ -46,10 +46,10 @@
     </section>
 
     <!-- Product Grid -->
-    <section>
+    <section class="product-grid">
       <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 class="text-2xl font-bold text-gray-800">Recommended for You</h2>
+          <h2 class="text-2xl font-bold recommended">Recommended for You</h2>
           <p class="text-sm text-gray-500">Top freshness picks based on your recent activity.</p>
         </div>
         <div class="flex shrink-0 gap-2">
@@ -65,7 +65,7 @@
       </div>
 
       <!-- Danh sách sản phẩm đổ bằng v-for -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 grid-items-stretch">
         <article 
           v-for="product in filteredProducts" 
           :key="product.id"
@@ -327,5 +327,23 @@ function addToCart(productId: number) {
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+  padding: 2rem;
+}
+.product-grid {
+  padding: 0 2rem;
+}
+.product-grid h2 {
+  color: #006c49;
+  font-size: 28px;
+  font-weight: 700;
+}
+.product-grid p {
+  color: #6b7280;
+  font-size: 20px;
+}
+.grid-items-stretch{
+  /* display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); */
+  padding: 2rem 0;
 }
 </style>

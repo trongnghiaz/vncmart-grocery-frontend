@@ -29,16 +29,17 @@
           />
         </form>
 
-        <nav class="hidden items-center gap-6 lg:flex" aria-label="Customer categories">
-          <RouterLink
-            v-for="link in categoryLinks"
-            :key="link.label"
-            :to="link.to"
-            class="border-b-2 border-transparent pb-1 text-sm font-semibold text-gray-600 transition hover:text-[#006c49]"
-            active-class="border-[#006c49] text-[#006c49]"
-          >
-            {{ link.label }}
-          </RouterLink>
+        <nav class="hidden items-center gap-6 lg:flex menu-items" aria-label="Customer categories">
+            <RouterLink
+              v-for="link in categoryLinks"
+              :key="link.label"
+              :to="link.to"
+              class="border-b-2 border-transparent pb-1 text-sm font-semibold text-gray-600 transition hover:text-[#006c49]"
+              active-class="border-[#006c49] text-[#006c49]"
+            >
+              {{ link.label }}
+            </RouterLink>
+          
         </nav>
 
         <div class="flex shrink-0 items-center gap-2 sm:gap-3">
@@ -250,5 +251,17 @@ function logout() {
 <style type="scope">
   .head-logo{
     height: 60px;
+  }
+  .menu-items a{
+    font-size: 18px;
+    font-weight: 600;
+    color: #006c49;
+    height: 4rem;
+    align-content: center;
+    min-width: 100px;
+  }
+  .menu-items a:hover{
+    background-color: #006c49;
+    color: white;
   }
 </style>

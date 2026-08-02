@@ -16,7 +16,7 @@
         class="auth-card bg-white rounded-2xl overflow-hidden border border-gray-200 p-8 flex flex-col items-center shadow-sm"
       >
         <!-- Branding -->
-        <div class="flex flex-col items-center mb-8">
+        <div class="flex flex-col items-center mb-8 logo-container">
           <div class="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mb-2">
             <span
               class="material-symbols-outlined text-[#006c49] text-[40px] select-none"
@@ -368,5 +368,17 @@ onBeforeUnmount(stopOtpTimer)
 }
 .login-btn-shadow {
   box-shadow: 0px 10px 30px rgba(0, 108, 73, 0.15);
+}
+.auth-page h1{
+  font-size: 32px;
+  font-weight: 700;
+}
+.auth-page .logo-container p{
+  font-size: 20px;
+  font-weight: 400;
+}
+.auth-page label{
+  font-size: 16px;
+  font-weight: 500;
 }
 </style>

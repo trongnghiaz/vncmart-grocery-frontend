@@ -69,7 +69,7 @@ body {
   }
   .page-shell {
     min-height: 100vh;
-    padding-block: 1.5rem 3rem;
+    padding-block: 0 3rem;
   }
 
   .auth-page {
