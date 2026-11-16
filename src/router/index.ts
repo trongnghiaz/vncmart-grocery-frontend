@@ -39,6 +39,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/customer/OrderHistoryView.vue'),
         meta: { requiresAuth: true },
       },
+      {
+        path: ':pathMatch(.*)*',
+        name: 'NotFound',
+        component: () => import('@/views/customer/NotFoundView.vue'),
+      },
     ],
   },
   {
@@ -68,11 +73,6 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/admin/OrderManagementView.vue'),
       },
     ],
-  },
-  {
-    path: '/:pathMatch(.*)*',
-    name: 'NotFound',
-    component: () => import('@/views/customer/NotFoundView.vue'),
   },
 ];
 
