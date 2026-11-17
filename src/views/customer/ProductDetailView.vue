@@ -3,7 +3,7 @@
     <nav class="flex flex-wrap items-center gap-1 text-xs font-semibold text-gray-500">
       <RouterLink :to="{ name: 'Home' }" class="hover:text-[#006c49]">Home</RouterLink>
       <span class="material-symbols-outlined text-[16px]">chevron_right</span>
-      <RouterLink :to="{ name: 'Home', query: { category: product.categorySlug } }" class="hover:text-[#006c49]">
+      <RouterLink :to="{ name: 'Products', query: { category: product.categorySlug } }" class="hover:text-[#006c49]">
         {{ product.categoryName }}
       </RouterLink>
       <span class="material-symbols-outlined text-[16px]">chevron_right</span>

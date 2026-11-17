@@ -165,6 +165,7 @@ import { computed, ref } from 'vue'
 import { useRouter, type RouteLocationRaw } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import CartDrawer from './CartDrawer.vue'
+import catalog from '@/data/home-products.json'
 
 interface HeaderLink {
   label: string
@@ -218,13 +219,10 @@ const isAccountMenuOpen = ref(false)
 const isCartOpen = ref(false)
 const cartCount = computed(() => cartItems.value.reduce((total, item) => total + item.quantity, 0))
 
-const categoryLinks: HeaderLink[] = [
-  { label: 'Vegetables', to: { name: 'Home', query: { category: 'vegetables' } } },
-  { label: 'Fruits', to: { name: 'Home', query: { category: 'fruits' } } },
-  { label: 'Dairy', to: { name: 'Home', query: { category: 'dairy' } } },
-  { label: 'Meat', to: { name: 'Home', query: { category: 'meat' } } },
-  { label: 'Bakery', to: { name: 'Home', query: { category: 'bakery' } } },
-]
+const categoryLinks: HeaderLink[] = catalog.categories.map((category) => ({
+  label: category.name,
+  to: { name: 'Products', query: { category: category.slug } },
+}))
 
 function closeMenus() {
   isMobileMenuOpen.value = false
@@ -239,7 +237,7 @@ function openCart() {
 function submitSearch() {
   const query = searchTerm.value ? { search: searchTerm.value } : {}
   closeMenus()
-  router.push({ name: 'Home', query })
+  router.push({ name: 'Products', query })
 }
 
 function logout() {

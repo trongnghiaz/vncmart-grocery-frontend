@@ -1,0 +1,188 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "Vegetables",
+      "slug": "vegetables",
+      "icon": "carrot",
+      "products": [
+        {
+          "id": 1,
+          "name": "Organic Avocado",
+          "category": "vegetables",
+          "categoryName": "Vegetables",
+          "price": 28000,
+          "oldPrice": 35000,
+          "rating": 4.5,
+          "reviews": 120,
+          "image": "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=500",
+          "isFresh": true,
+          "isOrganic": true,
+          "isHotDeal": false
+        },
+        {
+          "id": 2,
+          "name": "Fresh Broccoli",
+          "category": "vegetables",
+          "categoryName": "Vegetables",
+          "price": 18000,
+          "oldPrice": 22000,
+          "rating": 4.8,
+          "reviews": 85,
+          "image": "https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=500",
+          "isFresh": true,
+          "isOrganic": true,
+          "isHotDeal": true
+        },
+        {
+          "id": 3,
+          "name": "Fresh Carrots",
+          "category": "vegetables",
+          "categoryName": "Vegetables",
+          "price": 12000,
+          "oldPrice": 15000,
+          "rating": 4.6,
+          "reviews": 64,
+          "image": "https://images.unsplash.com/photo-1445282768818-728615cc910a?w=500",
+          "isFresh": true,
+          "isOrganic": false,
+          "isHotDeal": false
+        },
+        {
+          "id": 4,
+          "name": "Red Bell Pepper",
+          "category": "vegetables",
+          "categoryName": "Vegetables",
+          "price": 22000,
+          "oldPrice": 28000,
+          "rating": 4.7,
+          "reviews": 92,
+          "image": "https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?w=500",
+          "isFresh": true,
+          "isOrganic": false,
+          "isHotDeal": true
+        },
+        {
+          "id": 5,
+          "name": "Fresh Tomatoes",
+          "category": "vegetables",
+          "categoryName": "Vegetables",
+          "price": 15000,
+          "oldPrice": 18000,
+          "rating": 4.4,
+          "reviews": 73,
+          "image": "https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=500",
+          "isFresh": true,
+          "isOrganic": true,
+          "isHotDeal": false
+        },
+        {
+          "id": 6,
+          "name": "Organic Cucumber",
+          "category": "vegetables",
+          "categoryName": "Vegetables",
+          "price": 10000,
+          "oldPrice": 13000,
+          "rating": 4.5,
+          "reviews": 56,
+          "image": "https://images.unsplash.com/photo-1604977042946-1eecc30f269e?w=500",
+          "isFresh": true,
+          "isOrganic": true,
+          "isHotDeal": false
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Fruits",
+      "slug": "fruits",
+      "icon": "apple",
+      "products": [
+        {
+          "id": 7,
+          "name": "Fresh Red Apple",
+          "category": "fruits",
+          "categoryName": "Fruits",
+          "price": 35000,
+          "oldPrice": 42000,
+          "rating": 4.8,
+          "reviews": 156,
+          "image": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=500",
+          "isFresh": true,
+          "isOrganic": false,
+          "isHotDeal": true
+        },
+        {
+          "id": 8,
+          "name": "Fresh Bananas",
+          "category": "fruits",
+          "categoryName": "Fruits",
+          "price": 18000,
+          "oldPrice": 20000,
+          "rating": 4.6,
+          "reviews": 98,
+          "image": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=500",
+          "isFresh": true,
+          "isOrganic": false,
+          "isHotDeal": false
+        },
+        {
+          "id": 9,
+          "name": "Fresh Strawberries",
+          "category": "fruits",
+          "categoryName": "Fruits",
+          "price": 55000,
+          "oldPrice": 65000,
+          "rating": 4.9,
+          "reviews": 210,
+          "image": "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=500",
+          "isFresh": true,
+          "isOrganic": true,
+          "isHotDeal": true
+        },
+        {
+          "id": 10,
+          "name": "Fresh Oranges",
+          "category": "fruits",
+          "categoryName": "Fruits",
+          "price": 25000,
+          "oldPrice": 30000,
+          "rating": 4.5,
+          "reviews": 87,
+          "image": "https://images.unsplash.com/photo-1547514701-42782101795e?w=500",
+          "isFresh": true,
+          "isOrganic": false,
+          "isHotDeal": false
+        },
+        {
+          "id": 11,
+          "name": "Green Grapes",
+          "category": "fruits",
+          "categoryName": "Fruits",
+          "price": 45000,
+          "oldPrice": 52000,
+          "rating": 4.7,
+          "reviews": 132,
+          "image": "https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=500",
+          "isFresh": true,
+          "isOrganic": true,
+          "isHotDeal": false
+        },
+        {
+          "id": 12,
+          "name": "Fresh Watermelon",
+          "category": "fruits",
+          "categoryName": "Fruits",
+          "price": 16000,
+          "oldPrice": 19000,
+          "rating": 4.6,
+          "reviews": 75,
+          "image": "https://images.unsplash.com/photo-1563114773-84221bd62daa?w=500",
+          "isFresh": true,
+          "isOrganic": false,
+          "isHotDeal": false
+        }
+      ]
+    }
+  ]
+}
